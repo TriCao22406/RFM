@@ -69,4 +69,4 @@ def FMClass(x, p, d):
     else:
         return 4
 
-rfm("sample-orders.csv","output.csv","2023-10-17")
+rfm("sample-orders.csv","output.csv","2022-12-31")
