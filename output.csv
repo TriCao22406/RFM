@@ -1,4 +1,4 @@
-customer,recency,frequency,monetary_value,R_Quartile,F_Quartile,M_Quartile,RFMClass
+customer,recency,frequency,monetary_value,R_Quartile,F_Quartile,M_Quartile,RFMScore
 Aaron Bergman,415,3,887,1,1,1,111
 Aaron Hawkins,12,7,1744,4,3,2,432
 Aaron Smayling,88,7,3050,2,3,3,233

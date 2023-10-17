@@ -35,7 +35,7 @@ def rfm(inputfile, outputfile, inputdate):
     rfmSegmentation['M_Quartile'] = rfmSegmentation['monetary_value'].apply(FMClass,
                                                                             args=('monetary_value', quantiles,))
 
-    rfmSegmentation['RFMClass'] = rfmSegmentation.R_Quartile.map(str) + rfmSegmentation.F_Quartile.map(
+    rfmSegmentation['RFMScore'] = rfmSegmentation.R_Quartile.map(str) + rfmSegmentation.F_Quartile.map(
         str) + rfmSegmentation.M_Quartile.map(str)
 
     rfmSegmentation.to_csv(outputfile, sep=',')
