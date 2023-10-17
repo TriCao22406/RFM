@@ -25,15 +25,15 @@ def rfm(inputfile, outputfile, inputdate):
                              'order_id': 'frequency',
                              'grand_total': 'monetary_value'}, inplace=True)
 
-    quantiles = rfmTable.quantile(q=[0.25, 0.5, 0.75])
-    quantiles = quantiles.to_dict()
+    quintiles = rfmTable.quantile(q=[0.20, 0.40, 0.60, 0.80])
+    quintiles = quintiles.to_dict()
 
     rfmSegmentation = rfmTable
 
-    rfmSegmentation['R_Quartile'] = rfmSegmentation['recency'].apply(RClass, args=('recency', quantiles,))
-    rfmSegmentation['F_Quartile'] = rfmSegmentation['frequency'].apply(FMClass, args=('frequency', quantiles,))
+    rfmSegmentation['R_Quartile'] = rfmSegmentation['recency'].apply(RClass, args=('recency', quintiles,))
+    rfmSegmentation['F_Quartile'] = rfmSegmentation['frequency'].apply(FMClass, args=('frequency', quintiles,))
     rfmSegmentation['M_Quartile'] = rfmSegmentation['monetary_value'].apply(FMClass,
-                                                                            args=('monetary_value', quantiles,))
+                                                                            args=('monetary_value', quintiles,))
 
     rfmSegmentation['RFMScore'] = rfmSegmentation.R_Quartile.map(str) + rfmSegmentation.F_Quartile.map(
         str) + rfmSegmentation.M_Quartile.map(str)
@@ -48,11 +48,13 @@ def rfm(inputfile, outputfile, inputdate):
 # We create two classes for the RFM segmentation since, being high recency is bad, while high frequency and monetary value is good.
 # Arguments (x = value, p = recency, k = quartiles dict)
 def RClass(x, p, d):
-    if x <= d[p][0.25]:
+    if x <= d[p][0.20]:
+        return 5
+    elif x <= d[p][0.40]:
         return 4
-    elif x <= d[p][0.50]:
+    elif x <= d[p][0.60]:
         return 3
-    elif x <= d[p][0.75]:
+    elif x <= d[p][0.80]:
         return 2
     else:
         return 1
@@ -60,13 +62,15 @@ def RClass(x, p, d):
 
 # Arguments (x = value, p = monetary_value, frequency, k = quartiles dict)
 def FMClass(x, p, d):
-    if x <= d[p][0.25]:
+    if x <= d[p][0.20]:
         return 1
-    elif x <= d[p][0.50]:
+    elif x <= d[p][0.40]:
         return 2
-    elif x <= d[p][0.75]:
+    elif x <= d[p][0.60]:
         return 3
-    else:
+    elif x <= d[p][0.80]:
         return 4
+    else:
+        return 5
 
 rfm("sample-orders.csv","output.csv","2022-12-31")
