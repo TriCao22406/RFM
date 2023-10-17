@@ -46,27 +46,27 @@ def rfm(inputfile, outputfile, inputdate):
 
 
 # We create two classes for the RFM segmentation since, being high recency is bad, while high frequency and monetary value is good.
-# Arguments (x = value, p = recency, monetary_value, frequency, k = quartiles dict)
+# Arguments (x = value, p = recency, k = quartiles dict)
 def RClass(x, p, d):
     if x <= d[p][0.25]:
-        return 1
-    elif x <= d[p][0.50]:
-        return 2
-    elif x <= d[p][0.75]:
-        return 3
-    else:
         return 4
+    elif x <= d[p][0.50]:
+        return 3
+    elif x <= d[p][0.75]:
+        return 2
+    else:
+        return 1
 
 
-# Arguments (x = value, p = recency, monetary_value, frequency, k = quartiles dict)
+# Arguments (x = value, p = monetary_value, frequency, k = quartiles dict)
 def FMClass(x, p, d):
     if x <= d[p][0.25]:
-        return 4
-    elif x <= d[p][0.50]:
-        return 3
-    elif x <= d[p][0.75]:
-        return 2
-    else:
         return 1
+    elif x <= d[p][0.50]:
+        return 2
+    elif x <= d[p][0.75]:
+        return 3
+    else:
+        return 4
 
 rfm("sample-orders.csv","output.csv","2023-10-17")
