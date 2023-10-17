@@ -30,9 +30,9 @@ def rfm(inputfile, outputfile, inputdate):
 
     rfmSegmentation = rfmTable
 
-    rfmSegmentation['R_Quartile'] = rfmSegmentation['recency'].apply(RClass, args=('recency', quintiles,))
-    rfmSegmentation['F_Quartile'] = rfmSegmentation['frequency'].apply(FMClass, args=('frequency', quintiles,))
-    rfmSegmentation['M_Quartile'] = rfmSegmentation['monetary_value'].apply(FMClass,
+    rfmSegmentation['R_Quintile'] = rfmSegmentation['recency'].apply(RClass, args=('recency', quintiles,))
+    rfmSegmentation['F_Quintile'] = rfmSegmentation['frequency'].apply(FMClass, args=('frequency', quintiles,))
+    rfmSegmentation['M_Quintile'] = rfmSegmentation['monetary_value'].apply(FMClass,
                                                                             args=('monetary_value', quintiles,))
 
     rfmSegmentation['RFMScore'] = rfmSegmentation.R_Quartile.map(str) + rfmSegmentation.F_Quartile.map(
