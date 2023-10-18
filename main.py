@@ -10,6 +10,7 @@ def rfm(inputfile, outputfile, ngay_can_tinh):
     print(" tính toán RFM vào ngày " + ngay_can_tinh)
     print("---------------------------------------------")
 
+    # Chuyển đổi ngay_can_tinh thành đối tượng datetime với định dạng %Y-%m-%d
     NOW = datetime.strptime(ngay_can_tinh, "%Y-%m-%d")
 
     #tạo dataframe don_hang
@@ -17,17 +18,23 @@ def rfm(inputfile, outputfile, ngay_can_tinh):
     #chuyển dữ liệu chuỗi ngày đặt mua thành dữ liệu kiểu ngày tháng
     don_hang['ngay_dat_mua'] = pd.to_datetime(don_hang['ngay_dat_mua'])
     #nhóm các dữ liệu về khách hàng lại và tính toán
+    # Nhóm khung dữ liệu don_hang theo cột 'khach_hang'
+    # agg() áp dụng các hàm sau cho mỗi nhóm dữ liệu:
+        # lambda x: (NOW - x.max()).days tính số ngày kể từ lần mua hàng cuối cùng của khách hàng.
+        # lambda x: len(x) tính số lần mua hàng của khách hàng.
+        # lambda x: x.sum() tính tổng giá trị đơn hàng của khách hàng.
     bang_rfm = don_hang.groupby('khach_hang').agg({'ngay_dat_mua': lambda x: (NOW - x.max()).days,  # Recency
                                                'so_lan_mua_hang': lambda x: len(x),  # Frequency
                                                'tong_gia_tri_hang': lambda x: x.sum()})  # Monetary Value
-
+    # Chuyển đổi dữ liệu trong cột ngay_dat_mua của bảng RFM thành kiểu dữ liệu int
     #bang_rfm['ngay_dat_mua'] = bang_rfm['ngay_dat_mua'].astype(int)
-    #đổi tên để phù hợp với bảng rfm
+    # đổi tên các cột trong bảng RFM lần lượt thành recency, frequency và monetary_value
     bang_rfm.rename(columns={'ngay_dat_mua': 'recency',
                              'so_lan_mua_hang': 'frequency',
                              'tong_gia_tri_hang': 'monetary_value'}, inplace=True)
-    #tính toán tứ phân vị
+    #tính toán tứ phân vị cho mỗi cột trong bảng RFM
     tu_phan_vi = bang_rfm.quantile(q=[0.25, 0.5, 0.75])
+    # Chuyển đổi kết quả tính toán thành một dictionary
     tu_phan_vi = tu_phan_vi.to_dict()
 
     phan_doan_khach_hang = bang_rfm
