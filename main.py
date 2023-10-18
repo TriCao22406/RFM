@@ -1,6 +1,4 @@
 # Khai báo các thư viện
-import datetime as dt
-import numpy as np
 import pandas as pd
 from datetime import datetime
 
