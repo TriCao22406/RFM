@@ -25,14 +25,14 @@ def rfm(inputfile, outputfile, ngay_can_tinh):
         # lambda x: len(x) tính số đơn hàng của khách hàng.
         # lambda x: x.sum() tính tổng giá trị đơn hàng của khách hàng
     bang_rfm = don_hang.groupby('khach_hang').agg({'ngay_dat_mua': lambda x: (NOW - x.max()).days,  # Recency
-                                               'so_lan_mua_hang': lambda x: len(x),  # Frequency
+                                               'ma_mua_hang': lambda x: len(x),  # Frequency
                                                'tong_gia_tri_hang': lambda x: x.sum()})  # Monetary Value
 
     #bang_rfm['ngay_dat_mua'] = bang_rfm['ngay_dat_mua'].astype(int)
     
     #đổi tên các cột lần lượt thành recency, frequency và monetary_value
     bang_rfm.rename(columns={'ngay_dat_mua': 'recency',
-                             'so_lan_mua_hang': 'frequency',
+                             'ma_mua_hang': 'frequency',
                              'tong_gia_tri_hang': 'monetary_value'}, inplace=True)
     
     #tính toán ngũ phân vị cho mỗi cột trong bang_rfm
