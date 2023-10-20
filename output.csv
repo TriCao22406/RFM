@@ -1,4 +1,4 @@
-khach_hang,recency,frequency,monetary_value,ngu_phan_vi_R,ngu_phan_vi_F,ngu_phan_vi_M,tong_ket_RFM
+khach_hang,recency,frequency,monetary_value,ngu_phan_vi_R,ngu_phan_vi_F,ngu_phan_vi_M,Diem_RFM
 Aaron Bergman,415,3,887,1,1,1,111
 Aaron Hawkins,12,7,1744,5,3,3,533
 Aaron Smayling,88,7,3050,3,3,4,334
