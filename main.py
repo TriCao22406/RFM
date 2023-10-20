@@ -21,7 +21,7 @@ def rfm(inputfile, outputfile, ngay_can_tinh):
     # Tạo bang_rfm
     # don_hang.groupby('khach_hang'):  nhóm khung dữ liệu don_hang theo cột 'khach_hang'
     # agg() áp dụng các hàm sau cho mỗi nhóm dữ liệu:
-        # lambda x: (NOW - x.max()).days tính số ngày kể từ lần mua hàng cuối cùng của khách hàng.
+        # lambda x: (NOW - x.max()).days tính số n`gày kể từ lần mua hàng cuối cùng của khách hàng.
         # lambda x: len(x) tính số đơn hàng của khách hàng.
         # lambda x: x.sum() tính tổng giá trị đơn hàng của khách hàng
     bang_rfm = don_hang.groupby('khach_hang').agg({'ngay_dat_mua': lambda x: (NOW - x.max()).days,  # Recency
@@ -127,4 +127,5 @@ def ngu_phan_vi_monetary_value(x, p, d):
         return 4
     else:
         return 5
+
 rfm("sample-orders.csv","output.csv","2022-12-31")
