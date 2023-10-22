@@ -16,8 +16,8 @@ def rfm(inputfile, outputfile, ngay_can_tinh):
     don_hang = pd.read_csv(inputfile, sep=',', encoding="windows-1252")
     
     #chuyển đổi cột ngay_dat_mua thành dữ liệu kiểu ngày tháng
-    don_hang['ngay_dat_mua'] = pd.to_datetime(don_hang['ngay_dat_mua'])
-    
+    don_hang['ngay_dat_mua'] = pd.to_datetime(don_hang['ngay_dat_mua'], format='%m/%d/%y')
+
     # Tạo bang_rfm
     # don_hang.groupby('khach_hang'):  nhóm khung dữ liệu don_hang theo cột 'khach_hang'
     # agg() áp dụng các hàm sau cho mỗi nhóm dữ liệu:
@@ -25,14 +25,14 @@ def rfm(inputfile, outputfile, ngay_can_tinh):
         # lambda x: len(x) tính số đơn hàng của khách hàng.
         # lambda x: x.sum() tính tổng giá trị đơn hàng của khách hàng
     bang_rfm = don_hang.groupby('khach_hang').agg({'ngay_dat_mua': lambda x: (NOW - x.max()).days,  # Recency
-                                               'ma_mua_hang': lambda x: len(x),  # Frequency
+                                               'ma_don_hang': lambda x: len(x),  # Frequency
                                                'tong_gia_tri_hang': lambda x: x.sum()})  # Monetary Value
-
+    print(NOW - datetime.strptime(2019-1-1, "%Y-%m-%d"))
     #bang_rfm['ngay_dat_mua'] = bang_rfm['ngay_dat_mua'].astype(int)
     
     #đổi tên các cột lần lượt thành recency, frequency và monetary_value
     bang_rfm.rename(columns={'ngay_dat_mua': 'recency',
-                             'ma_mua_hang': 'frequency',
+                             'ma_don_hang': 'frequency',
                              'tong_gia_tri_hang': 'monetary_value'}, inplace=True)
     
     #tính toán ngũ phân vị cho mỗi cột trong bang_rfm
@@ -128,4 +128,32 @@ def ngu_phan_vi_monetary_value(x, p, d):
     else:
         return 5
 
-rfm("sample-orders.csv","output.csv","2022-12-31")
+# rfm("sample-orders.csv","output.csv","2022-12-31")
+def segment(value):
+	if value == '555' or value == '554'  or value == '544' or value == '545' or value == '454' or value == '455' or value == '445':
+		return 'Champions'
+	elif value == '543' or  value == '444' or value == '435' or value == '355' or value == '354' or value == '345' or value == '344' or value == '335':
+		return 'Loyal'
+	elif value == '553' or  value == '551' or value == '552' or value == '541' or value == '542' or value == '533' or value == '532' or value == '531' or value == '452' or  value == '451' or value == '442' or value == '441' or value == '431' or value == '453' or value == '433' or value == '432' or value == '423' or  value == '353' or value == '352' or value == '351' or value == '342' or value == '341' or value == '333' or value == '323':
+		return 'Potential Loyalist'
+	elif value == '512' or  value == '511' or value == '422' or value == '421' or value == '412' or value == '411' or value == '311':
+		return 'New Customers'
+	elif value == '525' or  value == '524' or value == '523' or value == '522' or value == '521' or value == '515' or value == '514' or value == '513' or value == '425' or  value == '424' or value == '413' or value == '414' or value == '415' or value == '315' or value == '314' or value == '313':
+		return 'Promising'
+	elif value == '535' or  value == '534' or value == '443' or value == '434' or value == '343' or value == '334' or value == '325' or value == '324':
+		return 'Need Attention'
+	elif value == '331' or  value == '321' or value == '312' or value == '221' or value == '213' or value == '231' or value == '241' or value == '251':
+		return 'About To Sleep'
+	elif value == '255' or  value == '254' or value == '245' or value == '244' or value == '253' or value == '252' or value == '243' or value == '242' or value == '235' or  value == '234' or value == '225' or value == '224' or value == '153' or value == '152' or value == '145' or value == '143' or value == '142' or  value == '135' or value == '134' or value == '133' or value == '125' or value == '124':
+		return "At Risk"
+	elif value == '155' or  value == '154' or value == '144' or value == '214' or value == '215' or value == '115' or value == '114' or value == '113':
+		return 'Cannot Lose Them'
+	elif value == '332' or  value == '322' or value == '233' or value == '232' or value == '223' or value == '222' or value == '132' or value == '123' or value == '122' or value == '212' or value == '211':
+		return 'Hibernating Customers'
+	else:
+		return 'Lost Customers'
+
+df = pd.read_csv('output.csv')
+df['Phan_cum_thang_5'] = df['Diem_RFM'].apply(str).apply(segment)
+
+df.to_csv('output.csv', index=False)
